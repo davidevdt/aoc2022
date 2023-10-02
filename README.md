@@ -11,20 +11,20 @@ About the approach I used:
 ## How to compile and run the code 
 On Linux, you can run the code for all days by executing the following commands after downloading the repository:
 
-```$ ./build.sh``` <br>
-```$ ./aoc2022.sh``` 
+```$./build.sh``` <br>
+```$./aoc2022.sh``` 
 
 To run the test cases, you can use:
 
-```$ ./aoc2022.sh test```
+```$./aoc2022.sh test```
 
 This will also display the initial data configuration to ensure the data has been imported correctly.
 
 Alternatively, you can compile (e.g., with gcc) and run each single day as follows: 
 
-```$ g++ ./day1/day1.cpp -o ./day1/day1```<br>
-```$ ./day1/day1```
+```$g++ ./day1/day1.cpp -o ./day1/day1```<br>
+```$./day1/day1```
 
 Replace "1" with the desired day number. To run the test case, you can use: 
 
-```$ ./day1/day1 test```
+```$./day1/day1 test```
