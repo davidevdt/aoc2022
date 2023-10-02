@@ -18,7 +18,9 @@ To run the test cases, you can use:
 
 ```$ ./aoc2022.sh test```
 
-This will also display the initial data configuration to ensure the data has been imported correctly.
+This will also display the initial data configuration to ensure the data has been imported correctly. To clean the build, run
+
+`$ ./clean.sh` 
 
 Alternatively, you can compile (e.g., with gcc) and run each single day as follows: 
 
