@@ -95,7 +95,6 @@ folder get_data(const std::string& file_name) {
 
 	std::ifstream input_file{file_name};  
 	folder file_system("/"); 
-	bool navigating = true; 
 
 	if (input_file.is_open()) {
 		std::string line; 
