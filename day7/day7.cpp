@@ -7,7 +7,7 @@
 
 using file = std::pair<size_t, std::string>; 
 
-// The following class aims at representing the pc's filesystem. 
+// The following class aims at representing a pc's folders. 
 class folder {
 	folder* parent = nullptr; 
 	std::vector<std::unique_ptr<folder>> subfolders; 
