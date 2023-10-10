@@ -4,6 +4,7 @@
 #include <vector> 
 #include <memory> 
 #include <sstream> 
+#include <map> 
 
 using file = std::pair<size_t, std::string>; 
 
@@ -37,8 +38,20 @@ class folder {
 	// 	this->subfolders.emplace_back(std::make_unique<folder>(std::move(sub_folder_name))); 
 	// }
 
+	const std::vector<folder*> get_subfolders() const {
+		std::vector<folder*> result;
+		for (const auto& subfolder : subfolders) {
+			result.push_back(subfolder.get());
+		}
+		return result;
+	}
+
 	void add_file(const size_t size, std::string& file_name) {
 		this->files.emplace_back(file{size, file_name}); 
+	}
+
+	std::vector<file> get_files() const {
+		return this->files; 
 	}
 
 	folder* find_subfolder(const std::string& sub_folder_name) const {
@@ -71,8 +84,8 @@ class folder {
 }; 
 
 folder get_data(const std::string&); 
-void solve_parte_one(); 
-void solve_part_two(); 
+void solve_part_one(const folder&); 
+void solve_part_two(const folder&); 
 
 int main(int argc, char* argv[]) {
 	std::cout << ">>> Advent Of Code 2022 - Day 7 <<<" << std::endl; 
@@ -89,6 +102,9 @@ int main(int argc, char* argv[]) {
 	if (is_test) {
 		std::cout << file_system.scan_folder() << std::endl; 
 	}
+
+	solve_part_one(file_system); 
+    solve_part_two(file_system); 
 }
 
 folder get_data(const std::string& file_name) {
@@ -138,4 +154,74 @@ folder get_data(const std::string& file_name) {
 
 	input_file.close(); 
 	return file_system; 
+} 
+
+
+
+size_t calculate_folder_size(const folder& folder, std::multimap<size_t, std::string>& folders_size) {
+	size_t size = 0; 
+
+	auto subfolders = folder.get_subfolders(); 
+	if (subfolders.size() > 0) {
+		for (const auto& s: subfolders) {
+			size += calculate_folder_size(*s, folders_size); 
+		}	
+	}
+
+	auto files = folder.get_files(); 
+	if (files.size() > 0) {
+		for (const auto& f: files) {
+			size += f.first; 
+		}
+	}
+
+	folders_size.insert({size, folder.name}); 
+	return size;
+}
+
+// Approach: store the folders sizes in a ordered multimap. After that, 
+// loop through the map until the folders reach size 100000. Sum up the 
+// sizes of such folders and report the result. 
+auto calculate_size_deletable_folders(const folder& file_system) {
+	size_t result; 
+	std::multimap<size_t, std::string> folders_size; 
+	calculate_folder_size(file_system, folders_size); 
+
+	size_t folder_size = 0; 
+	auto folders_iterator = folders_size.begin(); 
+	while (folders_iterator != folders_size.end()) {
+		if (folders_iterator->first > 100000) break; 
+		folder_size += folders_iterator->first; 
+		folders_iterator++; 
+	}
+
+	return folder_size; 
+}
+
+void solve_part_one(const folder& file_system) {
+	auto solution = calculate_size_deletable_folders(file_system); 
+	std::cout << "The solution to part one is " << solution << std::endl; 
+} 
+
+// Find the smallest one among the candidate folders that can free up 
+// enough space on disk if removed. Once again, use the ordered 
+// multimap to store the folders sizes. 
+auto calculate_size_smallest_large_folder(const folder& file_system) {
+	size_t result{0}; 
+	std::multimap<size_t, std::string> folders_size; 
+	auto unused_space = 70000000 - calculate_folder_size(file_system, folders_size); 
+
+	for (const auto& f: folders_size) {
+		if (unused_space + f.first >= 30000000) {
+			result = f.first; 
+			break; 
+		}
+	}
+
+	return result; 
+}
+
+void solve_part_two(const folder& file_system) {
+	auto solution = calculate_size_smallest_large_folder(file_system); 
+	std::cout << "The solution to part two is " << solution << std::endl; 
 } 
