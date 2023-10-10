@@ -156,8 +156,6 @@ folder get_data(const std::string& file_name) {
 	return file_system; 
 } 
 
-
-
 size_t calculate_folder_size(const folder& folder, std::multimap<size_t, std::string>& folders_size) {
 	size_t size = 0; 
 
