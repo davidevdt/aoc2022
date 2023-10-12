@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
     get_data(file_name, tree_grid); 
 
     if (is_test) {
-        std::cout << tree_grid.size()  << " by " << tree_grid.at(0).size() << "grid. Elements:" << std::endl;  
+        std::cout << tree_grid.size()  << " by " << tree_grid.at(0).size() << " grid. Elements:" << std::endl;  
         for (const auto& t: tree_grid) std::cout << t << std::endl; 
     }
 
