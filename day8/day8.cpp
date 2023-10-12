@@ -4,7 +4,7 @@
 #include <fstream>
 
 /* For this assignment, the tree grid will be stored as a matrix. 
-In particular, it will be a vector of containers, or, to say it better,
+In particular, it will be seen a vector of vectors, or, to say it better,
 as a vector of strings (we will consider strings as vectors of chars). */
 
 void get_data(const std::string&, std::vector<std::string>&);
