@@ -14,6 +14,8 @@ void solve_part_two(const std::vector<steps>&);
 
 int main(int argc, char* argv[]) {
 
+    std::cout << ">>> Advent Of Code 2022 - Day 9 <<<" << std::endl; 
+
     std::string file_name; 
     bool is_test; 
     std::vector<steps> instructions; 
