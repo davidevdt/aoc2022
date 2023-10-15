@@ -63,8 +63,8 @@ void get_data(const std::string& file_name, std::vector<steps>& instructions) {
 // if i_tail == i_head, it checks how far the head is horizontally 
 // if j_tail == j_head, it checks how far the head is vertically 
 // else it needs to make sure the diagonal distance is within one step max in either direction 
-// The function returns true if a knot has moved (useful for the second part of the assignment)
-// For part two, the tail is the knot under examination, while the head is the know preceding 
+// The function returns true if the tail knot has moved
+// For part two, the tail is the knot under examination, while the head is the knot preceding 
 // the one under examination. 
 auto check_and_move_tail(int& i_tail, int& j_tail,  const int i_head, const int j_head) -> bool {
 
@@ -130,16 +130,18 @@ auto count_visited_positions(const std::vector<steps>& instructions) {
                 default:
                     break; 
             }
-            check_and_move_tail(i_tail, j_tail,  i_head, j_head);
-            // Note that .insert() only inserts if the key is not already in the set 
-            visited_positions.insert(std::to_string(i_tail) + "-" + std::to_string(j_tail)); 
+            if (check_and_move_tail(i_tail, j_tail,  i_head, j_head)) {
+                // Note that .insert() only inserts if the key is not already in the set 
+                visited_positions.insert(std::to_string(i_tail) + "-" + std::to_string(j_tail));
+            } 
             n_steps--;
         } 
     }
     return visited_positions.size(); 
 }
 
-
+// Function for part 2. The logic is the same as with part 1, but we are using 
+// a vector of knots instead of just the head-tail knots. 
 auto count_visited_positions_large_rope(const std::vector<steps>& instructions) {
     std::unordered_set<std::string> visited_positions;  
     // Create a rope of ten knots all at the starting point (0,0)
@@ -175,9 +177,13 @@ auto count_visited_positions_large_rope(const std::vector<steps>& instructions) 
                     rope.at(k-1).first, rope.at(k-1).second)) {
                         break; 
                     }
+
+                if (k == rope.size() - 1) {
+                    // Note that .insert() only inserts if the key is not already in the set 
+                    visited_positions.insert(std::to_string(rope.at(9).first) + "-" + std::to_string(rope.at(9).second)); 
+                }
             }
-            // Note that .insert() only inserts if the key is not already in the set 
-            visited_positions.insert(std::to_string(rope.at(9).first) + "-" + std::to_string(rope.at(9).second)); 
+            
             n_steps--;
         } 
     }
