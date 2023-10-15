@@ -63,7 +63,9 @@ void get_data(const std::string& file_name, std::vector<steps>& instructions) {
 // if i_tail == i_head, it checks how far the head is horizontally 
 // if j_tail == j_head, it checks how far the head is vertically 
 // else it needs to make sure the diagonal distance is within one step max in either direction 
-// The function returns true if a know has moved (useful for the second part of the assignment)
+// The function returns true if a knot has moved (useful for the second part of the assignment)
+// For part two, the tail is the knot under examination, while the head is the know preceding 
+// the one under examination. 
 auto check_and_move_tail(int& i_tail, int& j_tail,  const int i_head, const int j_head) -> bool {
 
     // Horizontal alignment
