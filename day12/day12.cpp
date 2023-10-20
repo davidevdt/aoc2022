@@ -13,6 +13,9 @@ struct Node {
     size_t col; 
     Node* parent = nullptr; 
     Node(size_t r, size_t c): row(r), col(c) {}  
+    ~Node() {
+        if (parent != nullptr) delete parent; 
+    }
 }; 
 
 using Grid = std::vector<std::string>; 
