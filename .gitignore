@@ -2,3 +2,4 @@ build/
 build/*
 .vscode/
 .vscode/*
+day12/day12_depth_first[slow].cpp
