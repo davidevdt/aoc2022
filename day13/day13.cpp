@@ -3,6 +3,7 @@
 #include <sstream>
 #include <fstream> 
 #include <vector> 
+#include <algorithm> 
 
 /* This has been the hardest puzzle so far. It took me quite some time to understand how to parse the 
 signals and into which data structure to store them, let alone thinking about all the possible cases 
@@ -49,7 +50,7 @@ using PacketPair = std::pair<NestedVector, NestedVector>;
 
 void get_data(const std::string&, std::vector<PacketPair>&); 
 void solve_part_one(std::vector<PacketPair>&); 
-// void solve_part_two(Grid& grid); 
+void solve_part_two(const std::vector<PacketPair>& signals); 
 
 int main(int argc, char* argv[]) {
 
@@ -75,7 +76,7 @@ int main(int argc, char* argv[]) {
     }
 
     solve_part_one(signals); 
-    // solve_part_two(); 
+    solve_part_two(signals); 
 
     return 0; 
 }
@@ -241,10 +242,11 @@ auto compare_pair(NestedVector& first, NestedVector& second) -> int {
 
     // Case 1: both lists are empty
     if (n1 == 0 && n2 == 0) {
-        if (s1 > 0 && s2 > 0) { 
+        if (s1 > 0 || s2 > 0) { 
             // Case 1a: the two numeric vectors are populated 
-            return compare_vectors(e1, e2); 
-        } 
+            auto result = compare_vectors(e1, e2);
+            return result; 
+        }  
         else if (s1 > 0 && s2 == 0) return -1; // Case 1b: only the first inner vector contains numbers
         else if (s1 == 0 && s2 > 0) return 1; // Case 1c: only the second inner vector contains numbers 
         else return 0; // Both vectors are empty 
@@ -280,6 +282,8 @@ auto compare_pair(NestedVector& first, NestedVector& second) -> int {
         }
 
         // Case 2c: list vs. list -> it loops through the lists of the two input NestedVector's
+        // std::vector<NestedVector> ll1(l1.begin(), l1.end()); 
+        // std::vector<NestedVector> ll2(l2.begin(), l2.end()); 
         for (size_t ind = 0; ind < n2; ++ind) {
             // Case 2ci: The current inner NestedVector of the second input list contains only numbers 
             // (in which case wrap it with a new NestedVector and insert it into the list to allow for recursive call 
@@ -304,7 +308,8 @@ auto compare_pair(NestedVector& first, NestedVector& second) -> int {
         if (n1 > n2) return -1;             
         else return 0; // n1 == n2 case 
     }
-    // Case 3: the second NestedVector's list contains more elements than the first
+
+    // Case 3: the second NestedVector's list contains more elements than the first (n2 > n1)
     // This case is the mirrored version of Case 2 
     int result; 
     if (n1 == 0) {
@@ -328,6 +333,8 @@ auto compare_pair(NestedVector& first, NestedVector& second) -> int {
     }
 
     // List vs. list 
+    // std::vector<NestedVector> ll1(l1.begin(), l1.end()); 
+    // std::vector<NestedVector> ll2(l2.begin(), l2.end());  
     for (size_t ind = 0; ind < n1; ++ind) {
         if (l1.at(ind).list.size() > 0 && l2.at(ind).list.size() == 0 && l2.at(ind).elements.size() > 0) {
             NestedVector nv; 
@@ -360,9 +367,50 @@ void solve_part_one(std::vector<PacketPair>& signals) {
     std::cout << "The solution to part one is " << solution << std::endl; 
 }
 
-// void solve_part_two(Grid& grid) {
-//     auto solution = find_size_best_path(grid, 'a'); 
-//     std::cout << "The solution to part two is " << solution << std::endl; 
-// }
+// For part two, we write a function that: 
+// (a) stores all the NestedVector signals into one vector, rather than in pairs 
+// (b) adds the two divider packets into such vector
+// (c) uses std::sort to sort the signals according to the compare function we created for Part 1 
+auto sort_and_find_divider_indices(const std::vector<PacketPair>& signals) {
+
+    // a. store all signals in a vector
+    std::vector<NestedVector> signals_with_dividers; 
+    for (const auto& s: signals) {
+        signals_with_dividers.push_back(s.first); 
+        signals_with_dividers.push_back(s.second); 
+    }
+
+    // b. add dividers
+    std::vector<unsigned int> first_divider_element(1, 2); 
+    std::vector<unsigned int> second_divider_element(1, 6); 
+    NestedVector first_divider, second_divider; 
+    first_divider.elements = first_divider_element; 
+    second_divider.elements = second_divider_element; 
+    signals_with_dividers.push_back(first_divider); 
+    signals_with_dividers.push_back(second_divider); 
+
+    // c. sort the vector
+    std::sort(signals_with_dividers.begin(), signals_with_dividers.end(), [](NestedVector first, NestedVector second){
+        return compare_pair(first, second) > 0; 
+    }); 
+
+    // d. find the correct indices, multiply them, and return the result 
+    size_t num_dividers_found = 0; 
+    size_t solution = 1; 
+    for (size_t i = 0; i < signals_with_dividers.size(); ++i) {
+        auto s = signals_with_dividers.at(i);
+        if (s.list.size() == 0 && s.elements.size() == 1 && (s.elements.at(0) == 2 || s.elements.at(0) == 6)) {
+            num_dividers_found += 1; 
+            solution *= (i+1); 
+        }
+        if (num_dividers_found == 2) break; 
+    }
+    return solution; 
+}
+
+void solve_part_two(const std::vector<PacketPair>& signals) {
+    auto solution = sort_and_find_divider_indices(signals); 
+    std::cout << "The solution to part two is " << solution << std::endl; 
+}
 
 
