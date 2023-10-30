@@ -337,10 +337,10 @@ auto pour_with_bottom(const std::vector<RockPath>& r) {
             // std::cout << "SAND # " << sand_counter << std::endl;  
             // for (size_t j = MAX_TOP; j <= MIN_BOTTOM; ++j) {
             //     for (size_t i = LEFTMOST-10; i <= RIGHTMOST+10; ++i) {
-            //         if (i == 500 && j == 0) std::cout << "*"; 
-            //         else if (j == MIN_BOTTOM) std::cout << "#";
-            //         else if (rock_coordinates.find(Coordinate(i , j)) != rock_coordinates.end()) std::cout << "#";
-            //         else if (sand_coordinates.find(Coordinate(i,j)) != sand_coordinates.end()) std::cout << "o"; 
+            //         Coordinate c_tmp(i, j); 
+            //         if (j == MIN_BOTTOM) std::cout << "#";
+            //         else if (unavailable_coordinates.find(c_tmp) != unavailable_coordinates.end() && coordinate_collides_rock(r, c_tmp)) std::cout << "#";
+            //         else if (unavailable_coordinates.find(c_tmp) != unavailable_coordinates.end()) std::cout << "o";
             //         else std::cout << "."; 
             //     }
             //     std::cout << std::endl;  
