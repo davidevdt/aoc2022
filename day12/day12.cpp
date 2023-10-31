@@ -7,6 +7,7 @@
 #include <list> 
 #include <algorithm>
 #include <map>
+#include <queue> 
 
 struct Node {
     size_t row; 
