@@ -292,11 +292,11 @@ auto pour_with_bottom(const std::vector<RockPath>& r) {
     bool is_start = true; 
     std::stack<Coordinate> coming_from; 
     coming_from.push(STARTING_POINT); 
+    Coordinate sand, origin, tmp, new_c; 
     // Start pouring sand
     while (true) {
-        Coordinate sand = coming_from.top(); 
-        Coordinate origin = sand;
-        auto current_first = sand.first;
+        sand = coming_from.top(); 
+        origin = sand;
         bool sand_at_rest = false; 
         bool is_at_bottom = false; 
         int direction_from = 0; 
@@ -311,7 +311,7 @@ auto pour_with_bottom(const std::vector<RockPath>& r) {
             if (sand.first == tmp_starting_coorinate.first && sand.second > tmp_starting_coorinate.second+1) direction_from = 0; 
  
             if (!is_at_bottom) {
-                Coordinate tmp(sand.first - 1, sand.second); 
+                tmp = std::make_pair(sand.first - 1, sand.second); 
                 if (unavailable_coordinates.find(tmp) == unavailable_coordinates.end()) {
                     --sand.first; 
                     direction_from = -1; 
@@ -340,42 +340,40 @@ auto pour_with_bottom(const std::vector<RockPath>& r) {
             //     std::cout << std::endl;  
             // }
             // std::cout << std::endl; 
-
             --sand.second; 
             // std::cout << "new sand: " << "(" << sand.first << "," << sand.second << ")" << std::endl; 
             if (sand.first == origin.first && sand.second == origin.second) coming_from.pop(); 
             else {
                 if (direction_from == 0) {
-                    Coordinate new_c(sand.first, sand.second-1); 
+                    new_c = std::make_pair(sand.first, sand.second-1); 
                     if (unavailable_coordinates.find(new_c) == unavailable_coordinates.end() &&
                         sand.first != coming_from.top().first || sand.second != coming_from.top().second); 
-                        coming_from.push(Coordinate(sand.first, sand.second-1));
+                        coming_from.emplace(sand.first, sand.second-1);
                     // std::cout << "Adding: " << "(" << sand.first << "," << sand.second-1 << ")" << std::endl;
                 }
                 else if (direction_from == -1) {
-                    Coordinate new_c(sand.first+1, sand.second+1); 
+                    new_c = std::make_pair(sand.first+1, sand.second+1); 
                     if (unavailable_coordinates.find(new_c) == unavailable_coordinates.end() &&
                         coming_from.top().first > sand.first + 1) {
-                        coming_from.push(Coordinate(sand.first+1, sand.second-1));
+                        coming_from.emplace(sand.first+1, sand.second-1);
                         // std::cout << "Adding: " << "(" << sand.first+1 << "," << sand.second-1 << ")" << std::endl;
                     }
                 }
                 else {
                     // coming_from.pop(); 
                     // coming_from.push(Coordinate(sand.first-1, sand.second-1));
-                    Coordinate new_c(sand.first-1, sand.second-1); 
+                    new_c = std::make_pair(sand.first-1, sand.second-1); 
                     if (unavailable_coordinates.find(new_c) == unavailable_coordinates.end()) {
                         if (coming_from.top().first < sand.first - 1) {
-                            coming_from.push(Coordinate(sand.first-1, sand.second-1)); 
+                            coming_from.emplace(sand.first-1, sand.second-1); 
                         } else {
                             if (coming_from.top().first != STARTING_POINT.first && coming_from.top().second != STARTING_POINT.second)
-                            coming_from.pop(); // no more coordinates to explore from bottom right, come back to previous starting point
+                                coming_from.pop(); // no more coordinates to explore from bottom right, come back to previous starting point
                         }
                         // std::cout << "Adding: " << "(" << sand.first-1 << "," << sand.second-1 << ")" << std::endl;
                     }
                 }
             }
-
             // std::cout << "goes to " << sand.first << "-" << sand.second << std::endl;
             if (sand.first == STARTING_POINT.first && sand.second == STARTING_POINT.second) return ++sand_counter; 
             unavailable_coordinates.insert(sand); 
