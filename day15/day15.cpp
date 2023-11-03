@@ -318,7 +318,6 @@ auto detect_empty_positions_for_row(const std::vector<Sensor>& sensors, long int
 }
 
 void solve_part_one(const std::vector<Sensor>& sensors, long int row_nr) {
-    std::cout << "start computing..." << std::endl; 
     auto solution = detect_empty_positions_for_row(sensors, row_nr); 
     std::cout << "The solution to part one is " << solution << std::endl; 
 }
