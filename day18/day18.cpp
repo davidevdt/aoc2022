@@ -6,7 +6,7 @@
 #include <unordered_set> 
 #include <queue>
 
-// For Day 19, I create a Cube struct which contains the coordinates x, y, z. To solve part I's puzzle, I put all the 
+// For Day 18, I create a Cube struct which contains the coordinates x, y, z. To solve part I's puzzle, I put all the 
 // input cubes inside a hash set, and check for each cube's face whether there are cubes adjacent to it. If so, then the 
 // surface is excluded from the grand total. For Part II, I calculate a sort of "min" and "max" cubes, which contains the 
 // min and max extremes of the all the cubes in my input set. Then it uses a sort of "breadth-first-search" algorithm to 
