@@ -90,7 +90,7 @@ struct Elf {
       return Elf(this->row, this->col-1); 
     case Dirs::NW: 
       return Elf(this->row-1, this->col-1); 
-    default: // Dirs::NONE
+    default: // just a placeholder (never reached)
       return *this; 
     }
   }
@@ -110,7 +110,7 @@ struct Elf {
       return !neighbors_are_occupied.at(3) && !neighbors_are_occupied.at(4) && !neighbors_are_occupied.at(5);
     case Dirs::W: 
       return !neighbors_are_occupied.at(5) && !neighbors_are_occupied.at(6) && !neighbors_are_occupied.at(7);
-    default: // Dirs::W
+    default: 
       return false;
     }
   }
