@@ -286,12 +286,11 @@ auto shortest_path(const std::vector<std::string>& map, const Coordinate& start_
       if (visited_states.insert(c.to_string() + '-' + std::to_string(curr_time)).second) {
         c.set_distance(end_to); 
         
-        auto it = std::find_if(priority_queue.begin(), priority_queue.end(), [&c](const std::pair<Coordinate, int>& c1) {
-          return c1.first == c; 
-        });
-        
         // This can be done to save memory, but it doesn't really have practical effects on 
         // algorithm's efficiency 
+        // auto it = std::find_if(priority_queue.begin(), priority_queue.end(), [&c](const std::pair<Coordinate, int>& c1) {
+        //   return c1.first == c; 
+        // });
         // if (it != priority_queue.end()) {
         //   if (it->second >= curr_time) priority_queue.erase(it);
         // }
