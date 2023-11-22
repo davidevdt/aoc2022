@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <unordered_map>
 #include <limits>
+#include <cmath>
 
 /* For today's task, I will create and Elf struct (which really is a coordinate container) 
    that will implement the following methods: 
