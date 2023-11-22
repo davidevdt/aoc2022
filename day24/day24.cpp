@@ -41,19 +41,12 @@ struct Coordinate {
     }
   };
   
-  size_t row; size_t col; size_t dist_from_target; 
+  size_t row; size_t col; 
   
-  explicit Coordinate(size_t r, size_t c) noexcept: row(r), col(c), dist_from_target(0) {}
-  explicit Coordinate(size_t r, size_t c, const Coordinate& target) noexcept: row(r), col(c) {
-    this->set_distance(target); 
-  }
-  Coordinate() : row(0), col(0), dist_from_target(0) {}
-  Coordinate(const Coordinate& other): row(other.row), col(other.col), dist_from_target(0) {}
-  
-  // Set the distance of the coordinate from the target (useful for the Dijkstra heuristics)
-  auto set_distance(const Coordinate& target) -> size_t {
-    this->dist_from_target = std::abs(this->row - target.row) + std::abs(this->col - target.col);
-  }
+  explicit Coordinate(size_t r, size_t c) noexcept: row(r), col(c) {}
+  explicit Coordinate(size_t r, size_t c, const Coordinate& target) noexcept: row(r), col(c) {}
+  Coordinate() : row(0), col(0) {}
+  Coordinate(const Coordinate& other): row(other.row), col(other.col) {}
   
   // Get all the neighbors of a coordinate
   // This is the new part compared to the originally proposed solution: instead of proposing all possible neighbors, 
@@ -200,10 +193,9 @@ auto lcm_from_map(size_t n_rows, size_t n_cols) -> size_t {
 }
 
 // Shortest path algorithm 
-// Gives priority to coordinates with shortest time passed and distance from the target coordinate
+// Gives priority to coordinates with shortest time passed 
 struct StateComparator {
   bool operator()(const std::pair<Coordinate, int>& s1, const std::pair<Coordinate, int>& s2) const {
-    // return s1.second + s1.first.dist_from_target <= s2.second + s2.first.dist_from_target; 
     return s1.second <= s2.second; 
   }
 };
@@ -233,7 +225,6 @@ auto shortest_path(const std::vector<std::string>& map, const Coordinate& start_
     // Add the left coordinates to the priority queue
     for (auto& c: neighbors) {
       if (visited_states.insert(c.to_string() + '-' + std::to_string(curr_time % time_cycle)).second) {
-        // c.set_distance(end_to); 
         priority_queue.emplace(std::make_pair(c, curr_time)); 
       }
     }
@@ -249,7 +240,6 @@ auto find_exit(const std::vector<std::string>& map, bool part_two = false) -> in
 
   Coordinate end(map.size()-1, map.at(0).size()-2); 
   Coordinate start(0, 1, end);
-  end.set_distance(end); 
     
   std::unordered_set<std::string> visited_states; 
   std::set<std::pair<Coordinate, int>, StateComparator> priority_queue; 

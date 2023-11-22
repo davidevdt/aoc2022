@@ -50,8 +50,8 @@ struct Coordinate {
   Coordinate(const Coordinate& other): row(other.row), col(other.col), dist_from_target(0) {}
   
   // Set the distance of the coordinate from the target (useful for the Dijkstra heuristics)
-  auto set_distance(const Coordinate& target) -> size_t {
-    this->dist_from_target = std::abs(this->row - target.row) + std::abs(this->col - target.col);
+  auto set_distance(const Coordinate& target) -> void {
+    this->dist_from_target = std::abs(static_cast<int>(this->row - target.row)) + std::abs(static_cast<int>(this->col - target.col));
   }
   
   // Get all the neighbors of a coordinate
